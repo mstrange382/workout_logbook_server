@@ -4,7 +4,7 @@ let router = express.Router();
 let sequelize = require('../db');
 let jwt = require("jsonwebtoken");
 let bcrypt = require('bcryptjs');
-let User = sequelize.import('../models/user.js');
+let user = sequelize.import('../models/user.js');
 
 
 router.post('/register', (req, res) => {
@@ -12,9 +12,9 @@ router.post('/register', (req, res) => {
         username: req.body.user.username,
         password: bcrypt.hashSync(req.body.user.password, 15)
     };
-    User.create(registerLog)
+    user.create(registerLog)
     .then(
-        function(user){
+        function createSuccess(user){
             let token = jwt.sign({id: user.id}, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
             res.status(200).json({
                 user: user,
@@ -25,7 +25,7 @@ router.post('/register', (req, res) => {
 })});
 
 router.post('/login', function (req, res)  {
-    User.findOne({
+    user.findOne({
         where: {
             username: req.body.user.username
         }
