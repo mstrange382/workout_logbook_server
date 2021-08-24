@@ -16,14 +16,14 @@ router.post('/', validateSession, (req, res) => {
         result: req.body.log.result,
         owner_id: req.user.id,
     }
-    Log.create(workLog)
+    log.create(workLog)
     .then(log => res.status(200).json(log))
     .catch(err => res.status(500).json({error:err}))
 });
 
 router.get('/', validateSession, (req, res) => {
     log.findAll({
-        where: { id: req.params.id, owner_id: req.user.id}
+        where: { owner_id: req.user.id}
     })
     .then(log => res.status(200).json(log))
     .catch(err => res.status(500).json({error:err}))
